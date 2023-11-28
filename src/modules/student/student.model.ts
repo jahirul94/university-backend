@@ -2,7 +2,6 @@ import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import { StudentModel, TGuardian, TLocalGuardian, TStudent, TUserName } from './student.interface';
 
-
 const userNameSchema = new Schema<TUserName>({
     firstName: {
         type: String,
@@ -120,20 +119,6 @@ const studentSchema = new Schema<TStudent, StudentModel>({
     },
     profileImg: { type: String }
 });
-
-
-
-// pre save middleware 
-studentSchema.pre("save", function () {
-    console.log(this, "Pre hook ");
-})
-
-// post save middleware 
-studentSchema.post("save", function () {
-    console.log(this, "post hook : we saved our data");
-})
-
-
 
 // for static instance
 studentSchema.statics.isUserExits = async function (id: string) {

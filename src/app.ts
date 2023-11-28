@@ -1,8 +1,9 @@
-import express, { Application, Request, Response} from 'express';
+import express, { Application, Request, Response } from 'express';
 const app: Application = express();
 import cors from 'cors';
 import { StudentRoutes } from './modules/student/student.route';
 import { UsersRoutes } from './modules/user/user.route';
+import globalErrorHandler from './app/Middlewares/GlobalErrorHandler';
 
 // parser
 app.use(express.json());
@@ -21,5 +22,7 @@ const getAController = (req: Request, res: Response) => {
 }
 
 app.get('/', getAController);
+
+app.use(globalErrorHandler)
 
 export default app;
