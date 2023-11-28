@@ -69,9 +69,15 @@ const localGuardianSchema = new Schema<TLocalGuardian>({
 
 const studentSchema = new Schema<TStudent, StudentModel>({
     id: { type: String, required: true, unique: true },
+    user: {
+        type: Schema.Types.ObjectId,
+        required: [true, "User id is required"]
+    },
     name: {
         type: userNameSchema,
-        required: [true, "Name id required"]
+        required: [true, "Name id required"],
+        unique: true,
+        ref: "User"
     },
     gender: {
         type: String,
@@ -112,26 +118,19 @@ const studentSchema = new Schema<TStudent, StudentModel>({
         type: localGuardianSchema,
         required: true
     },
-    profileImg: { type: String },
-    isActive: {
-        type: String,
-        enum: {
-            values: ['active', 'blocked'],
-        },
-        default: "active"
-    },
+    profileImg: { type: String }
 });
 
 
 
 // pre save middleware 
 studentSchema.pre("save", function () {
-console.log(this , "Pre hook ");
+    console.log(this, "Pre hook ");
 })
 
 // post save middleware 
-studentSchema.post("save" , function(){
-    console.log(this , "post hook : we saved our data");
+studentSchema.post("save", function () {
+    console.log(this, "post hook : we saved our data");
 })
 
 
