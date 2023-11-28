@@ -1,5 +1,7 @@
+import httpStatus from "http-status";
 import { NextFunction, Request, Response } from "express";
 import { UserServices } from "./user.service";
+import sendResponse from "../../app/utils/sendResponse";
 
 const createStudent = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -9,9 +11,10 @@ const createStudent = async (req: Request, res: Response, next: NextFunction) =>
         // const zodParsedData = userValidation.parse(student)
 
         const result = await UserServices.createStudentIntoDB(password, studentData);
-        res.status(200).json({
+        sendResponse(res, {
             success: true,
-            message: "student is created successfully",
+            statusCode: httpStatus.OK,
+            message: "student created successfully",
             data: result
         })
     } catch (error) {
