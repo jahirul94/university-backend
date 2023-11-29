@@ -6,7 +6,8 @@ import config from "../../app/config";
 const userSchema = new Schema<TUser>({
     id: {
         type: String,
-        required: true
+        required: true,
+        unique: true
     },
     password: {
         type: String,
@@ -45,7 +46,7 @@ userSchema.pre("save", async function (next) {
 })
 
 // post save middleware 
-userSchema.post("save", function (doc , next) {
+userSchema.post("save", function (doc, next) {
     doc.password = ""
     next();
 })
