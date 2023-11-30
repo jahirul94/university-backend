@@ -9,6 +9,7 @@ router.post("/create-academic-semester",
     validateRequest(AcademicSemesterValidation.createAcademicSemesterValidations),
     AcademicSemesterControllers.createAcademicSemester)
 
+router.get("/academic-semester", AcademicSemesterControllers.getAllAcademicSemester)
 
 
 
