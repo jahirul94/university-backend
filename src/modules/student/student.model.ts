@@ -1,6 +1,8 @@
 import { Schema, model } from 'mongoose';
 import validator from 'validator';
 import { StudentModel, TGuardian, TLocalGuardian, TStudent, TUserName } from './student.interface';
+import AppError from '../../app/error/appError';
+import httpStatus from 'http-status';
 
 const userNameSchema = new Schema<TUserName>({
     firstName: {
@@ -117,9 +119,17 @@ const studentSchema = new Schema<TStudent, StudentModel>({
         type: Schema.Types.ObjectId,
         ref: "AcademicSemester"
     },
+    academicDepartment: {
+        type: Schema.Types.ObjectId,
+        ref: 'AcademicDepartment',
+    },
     localGuardian: {
         type: localGuardianSchema,
         required: true
+    },
+    isDeleted: {
+        type: Boolean,
+        default: false
     },
     profileImg: { type: String }
 });
@@ -131,14 +141,14 @@ studentSchema.statics.isUserExits = async function (id: string) {
 }
 
 
+studentSchema.pre("findOneAndUpdate", async function (next) {
+    const query = this.getQuery();
+    const isExistStudent = await Student.findOne(query);
+    if (!isExistStudent) {
+        throw new AppError(httpStatus.NOT_FOUND, "Student not found")
+    }
+    next();
 
-
-// custom instance
-
-// studentSchema.methods.isUserExist = async function (id: string) {
-//     const existingUser = await Student.findOne({ id })
-//     return existingUser;
-// }
-
+})
 
 export const Student = model<TStudent, StudentModel>('Student', studentSchema);

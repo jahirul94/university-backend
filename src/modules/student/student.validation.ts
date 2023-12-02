@@ -36,6 +36,7 @@ const createStudentValidationSchema = z.object({
             bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']),
             presentAddress: z.string(),
             admissionSemester: z.string(),
+            academicDepartment: z.string(),
             permanentAddress: z.string(),
             guardian: guardianValidationSchema,
             localGuardian: localGuardianValidationSchema,
@@ -44,6 +45,52 @@ const createStudentValidationSchema = z.object({
     })
 })
 
+
+// for update data 
+const updateUserNameValidationSchema = z.object({
+    firstName: z.string().max(30).optional(),
+    middleName: z.string().optional(),
+    lastName: z.string().max(20).optional(),
+});
+
+const updateGuardianValidationSchema = z.object({
+    fatherName: z.string().optional(),
+    fatherOccupation: z.string().optional(),
+    fatherContactNo: z.string().optional(),
+    motherName: z.string().optional(),
+    motherOccupation: z.string().optional(),
+    motherContactNo: z.string().optional(),
+});
+
+const updateLocalGuardianValidationSchema = z.object({
+    name: z.string().optional(),
+    occupation: z.string().optional(),
+    contactNo: z.string().optional(),
+    address: z.string().optional(),
+});
+
+const updateStudentValidationSchema = z.object({
+    body: z.object({
+        student: z.object({
+            name: updateUserNameValidationSchema.optional(),
+            gender: z.enum(['Male', 'Female', 'Other']).optional(),
+            dateOfBirth: z.string().optional(),
+            email: z.string().optional(),
+            contactNo: z.string().optional(),
+            emergencyContactNo: z.string().optional(),
+            bloodGroup: z.enum(['A+', 'A-', 'B+', 'B-', 'AB+', 'AB-', 'O+', 'O-']).optional(),
+            presentAddress: z.string().optional(),
+            admissionSemester: z.string().optional(),
+            academicDepartment: z.string().optional(),
+            permanentAddress: z.string().optional(),
+            guardian: updateGuardianValidationSchema.optional(),
+            localGuardian: updateLocalGuardianValidationSchema.optional(),
+            profileImg: z.string().optional(),
+        })
+    })
+})
+
 export const studentValidationSchemas = {
-    createStudentValidationSchema
-};
+    createStudentValidationSchema,
+    updateStudentValidationSchema
+}
