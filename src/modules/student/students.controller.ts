@@ -8,7 +8,7 @@ import catchAsync from '../../app/utils/catchAsync';
 // for catch error using promise
 
 const getAllStudents = catchAsync(async (req, res) => {
-    const result = await StudentServices.getAllStudentsFromDB();
+    const result = await StudentServices.getAllStudentsFromDB(req?.query);
     sendResponse(res, {
         success: true,
         statusCode: httpStatus.OK,

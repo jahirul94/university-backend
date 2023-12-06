@@ -15,15 +15,54 @@ const createStudentIntoDB = async (studentData: TStudent) => {
 }
 
 
-const getAllStudentsFromDB = async () => {
-    const result = await Student.find().populate("admissionSemester").populate({
-        path: "academicDepartment",
-        populate: {
-            path: "academicFaculty"
-        }
-    });
-    return result;
+const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
+    const studentSearchableFields = ['email', 'name.firstName', 'presentAddress'];
+
+    const queryObj = { ...query };
+
+
+    let searchTerm = "";
+    if (query?.searchTerm) {
+        searchTerm = query.searchTerm as string;
+    }
+
+    const excludeFields = ["searchTerm", "sort", "limit"]
+
+    excludeFields.forEach(el => delete queryObj[el]);
+
+    const searchQuery = Student.find({
+        $or: studentSearchableFields.map((field) => ({
+            [field]: { $regex: searchTerm, $options: 'i' }
+        }))
+    })
+
+    const filterQuery = searchQuery.find(queryObj)
+        .populate("admissionSemester")
+        .populate({
+            path: "academicDepartment",
+            populate: {
+                path: "academicFaculty"
+            }
+        });
+
+    let sort = "-createdAt"
+
+    if (query.sort) {
+        sort = query.sort as string
+    }
+
+    let limit = 1;
+    if (query.limit) {
+        limit = query.limit as number
+    }
+
+    const sortQuery = filterQuery.sort(sort);
+    const limitQuery = await sortQuery.limit(limit)
+    return limitQuery;
 }
+
+
+
 
 const getSingleStudentsFromDB = async (id: string) => {
     const result = await Student.findOne({ id }).populate("admissionSemester").populate({
@@ -38,7 +77,7 @@ const getSingleStudentsFromDB = async (id: string) => {
 const updateStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
     const { name, guardian, localGuardian, ...remainingStudentData } = payload;
     const modifiedUpdatedData: Record<string, unknown> = { ...remainingStudentData }
- 
+
     if (name && Object.keys(name).length) {
         for (const [key, value] of Object.entries(name)) {
             modifiedUpdatedData[`name.${key}`] = value;

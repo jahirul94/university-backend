@@ -1,4 +1,4 @@
-import { TAcademicSemester } from "../academicSemester/academicsemester.interface";
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { User } from "./user.model";
 
 
@@ -15,7 +15,7 @@ const findLastStudentId = async () => {
 }
 
 
-export const generatedStudentId = async (payload: TAcademicSemester) => {
+export const generatedStudentId = async (payload: any) => {
 
     // first time 0000
     let currentId = (0).toString();

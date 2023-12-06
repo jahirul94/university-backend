@@ -7,8 +7,6 @@ export type TAcademicSemesterNameCodeMapper = {
 }
 
 
-
-
 export type TAcademicSemester = {
     name: TAcademicSemesterName,
     code: TAcademicSemesterCode;

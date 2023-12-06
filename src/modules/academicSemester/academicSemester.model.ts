@@ -1,7 +1,7 @@
 import { Schema, model } from 'mongoose';
 import { AcademicSemesterCode, AcademicSemesterName, Months } from './academicSemester.constants';
-import { TAcademicSemester } from './academicsemester.interface';
 import AppError from '../../app/error/appError';
+import { TAcademicSemester } from './academicSemesterr.interface';
 
 
 const AcademicSemesterSchema = new Schema<TAcademicSemester>({
