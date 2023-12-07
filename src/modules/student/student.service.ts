@@ -70,11 +70,16 @@ const getAllStudentsFromDB = async (query: Record<string, unknown>) => {
     // if (query.fields) {
     //     fields = (query.fields as string).split(",").join(" ");
     // }
- 
+
     // const fieldQuery = await limitQuery.select(fields)
 
-    const studentQuery = new QueryBuilder(Student.find(),query).search(studentSearchableFields).filter().sort().paginate().fields();
-    
+    const studentQuery = new QueryBuilder(Student.find().populate("admissionSemester").populate({
+        path: "academicDepartment",
+        populate: {
+            path: "academicFaculty"
+        }
+    }), query).search(studentSearchableFields).filter().sort().paginate().fields();
+
     const result = await studentQuery.modelQuery;
 
     return result;
@@ -114,8 +119,6 @@ const updateStudentFromDB = async (id: string, payload: Partial<TStudent>) => {
             modifiedUpdatedData[`localGuardian.${key}`] = value;
         }
     }
-
-    console.log(modifiedUpdatedData);
     const result = await Student.findOneAndUpdate({ id },
         modifiedUpdatedData,
         { new: true, runValidators: true })
